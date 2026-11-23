@@ -1,4 +1,5 @@
 - [首页](README.md)
+- [联系我](联系.md)
 - [使用手册](使用手册.md)
 - [说明书](说明书.md)
 - <a href="复制.html" data-router-ignore target="_blank">一键复制规范 ↗</a>
