@@ -1,0 +1,63 @@
+name: 发布鱼鱼档案库
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: 依据提交历史生成首页
+        run: python3 同步首页.py
+      - name: 准备公开站点文件
+        shell: pwsh
+        run: |
+          $site = Join-Path $env:RUNNER_TEMP 'site'
+          $files = git -c core.quotepath=false ls-files
+          if ($LASTEXITCODE) { throw '读取提交文件清单失败' }
+          foreach ($file in $files) {
+            if ($file -ne '_sidebar.md' -and $file -match '(^|/)[._]|(^|/)AGENTS\.md$') { continue }
+            if ($file -notmatch '^assets/|\.(md|html)$' -and $file -ne '更新搜索索引.ps1') { continue }
+            $dest = Join-Path $site $file
+            [void][IO.Directory]::CreateDirectory((Split-Path $dest))
+            Copy-Item -LiteralPath $file -Destination $dest
+          }
+      - name: 生成搜索清单并核对发布文件
+        shell: pwsh
+        run: |
+          $script = Join-Path $env:RUNNER_TEMP 'site/更新搜索索引.ps1'
+          & $script
+          & $script -Check
+          Remove-Item -LiteralPath $script
+      - uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        with:
+          path: ${{ runner.temp }}/site
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publish.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: publish

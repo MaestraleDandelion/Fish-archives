@@ -1,0 +1,20 @@
+:root { --theme-color: #396e90; }
+.sidebar-nav .active > a { background-color: #eaf3f8; }
+.markdown-section.archive-home-page { max-width: 1070px; }
+#whale-archive .columns { display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 44px); }
+#whale-archive .rows ul { margin-top: 0; }
+#whale-archive .details { display: block; }
+#whale-archive .type { padding: 0 0.3em; border-radius: 3px; background: #e6f1f8; }
+#whale-archive .sea { padding: 0 1.2em 1em; overflow: hidden; position: relative; isolation: isolate; border: 1px solid #bed5e3; border-radius: 9px; background: linear-gradient(155deg, #f6fafd 0%, #deedf6 65%, #c2dfed 100%); }
+#whale-archive .card-actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 12px; border-top: 1px solid #accadb; padding-top: .65em; }
+#whale-archive .another { font: inherit; color: var(--theme-color); background: transparent; border: 0; padding: .2em; cursor: pointer; }
+#whale-archive .another:hover { text-decoration: underline; }
+#whale-archive .water{position:relative;height:clamp(105px,13vw,150px);pointer-events:none}
+#whale-archive .water::after{content:"";position:absolute;inset:59% -35px 0;z-index:-1;border-top:1px solid #fff8;border-radius:65% 40% 0 0;transform:rotate(-4deg)}
+#whale-archive .whale{position:absolute;width:80%;height:100%;left:8%;bottom:0;overflow:visible;animation:archive-swim var(--lap,16s) ease-in-out infinite}
+#whale-archive .flipper{transform-origin:250px 92px;animation:archive-fin 5.6s ease-in-out infinite}
+@keyframes archive-swim{0%,100%{transform:translate(-8%,4px) rotate(-2deg)}50%{transform:translate(9%,-6px) rotate(1.5deg)}}
+@keyframes archive-fin{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@media(prefers-reduced-motion:reduce){#whale-archive .whale,#whale-archive .flipper{animation:none}}
+
+@media (max-width: 768px) { #whale-archive .columns { grid-template-columns: 1fr; } }

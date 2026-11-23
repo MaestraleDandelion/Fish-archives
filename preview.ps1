@@ -1,10 +1,15 @@
-﻿param([switch]$NoBrowser)
+﻿param([switch]$NoBrowser, [switch]$Desktop)
 
 # 鱼鱼档案库 · 本地预览
 # 由 本地预览.bat 启动：起一个只在本机可访问的小服务器，然后打开浏览器。
 
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
+try {
+    & (Join-Path $root '更新搜索索引.ps1')
+} catch {
+    Write-Warning "索引未更新，可在预览中检查页面：$_"
+}
 $port = 8787
 
 while ($true) {
@@ -27,7 +32,10 @@ Write-Host "  $url" -ForegroundColor Yellow
 Write-Host '  关掉这个窗口，预览就停了。' -ForegroundColor DarkGray
 Write-Host ''
 
-if (-not $NoBrowser) { Start-Process $url }
+if (-not $NoBrowser) {
+    if ($Desktop) { Start-Process ($url + '_预览/桌面对照.html') }
+    else { Start-Process $url }
+}
 
 $mime = @{
     '.html' = 'text/html; charset=utf-8'
