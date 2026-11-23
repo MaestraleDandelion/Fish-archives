@@ -37,20 +37,38 @@
     article.replaceChildren(document.getElementById('archive-home').content.cloneNode(true));
     const rows=article.querySelector('.rows');
     let previousDay,group;
-    for(const e of ordered){
+    const initialCount = 5;
+    for(const [index, e] of ordered.entries()){
       const event=e.updated,day=dateFormat.format(new Date(event.at));
       if(day!==previousDay){
         const p=element('p','',rows);
         element('strong',day,p);
         group=element('ul','',rows);
+        if (index >= initialCount) {
+          p.classList.add('archive-extra');
+          group.classList.add('archive-extra');
+        }
         previousDay=day;
       }
       const li=element('li','',group);
+      if (index >= initialCount) li.classList.add('archive-extra');
       element('a',e.title,li).href=route(e,vm);
       const meta=element('span','',li);
       meta.className='details';
       element('span',event.kind,meta).className='type';
       meta.append('　原文 '+e.date);
+    }
+    if (ordered.length > initialCount) {
+      const more = element('button', '查看全部 ' + ordered.length + ' 条', rows.parentElement);
+      more.className = 'archive-more';
+      more.type = 'button';
+      more.setAttribute('aria-controls', 'archive-rows');
+      more.setAttribute('aria-expanded', 'false');
+      more.addEventListener('click', () => {
+        const expanded = rows.classList.toggle('expanded');
+        more.setAttribute('aria-expanded', String(expanded));
+        more.textContent = expanded ? '收起更新' : '查看全部 ' + ordered.length + ' 条';
+      });
     }
     const card=article.querySelector('.sea');
     const shuffle=card.querySelector('.another');
@@ -68,25 +86,11 @@
     shuffle.addEventListener('click',()=>{draw();showCard();});
   }
   window.$docsify.plugins=[].concat(window.$docsify.plugins||[],function(hook,vm){
-    const desktop = window.matchMedia('(min-width: 769px)');
-    let original = null;
-    function updateLayout() {
+    hook.doneEach(() => {
       const article = document.querySelector('.markdown-section');
       const home = ['/', '/README', '/README.md'].includes(vm.route.path);
-      const useCards = home && desktop.matches;
-      article.classList.toggle('archive-home-page', useCards);
-      if (useCards && !article.querySelector('#whale-archive')) {
-        original = Array.from(article.childNodes);
-        renderHome(article, vm);
-      } else if (!useCards && original && article.querySelector('#whale-archive')) {
-        article.replaceChildren(...original);
-        original = null;
-      }
-    }
-    hook.doneEach(() => {
-      original = null;
-      updateLayout();
+      article.classList.toggle('archive-home-page', home);
+      if (home && !article.querySelector('#whale-archive')) renderHome(article, vm);
     });
-    desktop.addEventListener('change', updateLayout);
   });
 })();

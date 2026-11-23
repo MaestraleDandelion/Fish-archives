@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>鱼鱼档案库</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="robots" content="noindex">
   <meta name="referrer" content="no-referrer">
   <link rel="stylesheet" href="assets/vue.css">
@@ -98,39 +98,9 @@
       .sidebar-nav li > ul { display: block; }
     }
 
-    @media (max-width: 768px) {
-      .markdown-section {
-        font-size: 15.5px;
-        line-height: 1.85;
-        padding: 16px 16px 120px;
-      }
-      .markdown-section h1 { font-size: 1.45em; }
-      .sidebar-toggle,
-      body.close .sidebar-toggle {
-        box-sizing: border-box !important;
-        width: 46px !important;
-        height: 46px !important;
-        padding: 0 !important;
-        bottom: 14px !important;
-        left: 14px !important;
-        display: flex !important;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.95) !important;
-        border-radius: 50% !important;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
-      }
-      .sidebar-toggle span {
-        width: 18px;
-        margin: 0 0 3px 0;
-      }
-      .sidebar-toggle span:last-child {
-        margin-bottom: 0;
-      }
-    }
   </style>
   <link rel="stylesheet" href="assets/home.css">
+  <link rel="stylesheet" href="assets/mobile.css">
 </head>
 <body>
   <div id="app">载入中…</div>
@@ -172,7 +142,7 @@
   <div id="whale-archive">
     <h1>鱼鱼档案库</h1>
     <div class="columns">
-      <section><h2>最近更新</h2><div class="rows"></div></section>
+      <section><h2>最近更新</h2><div class="rows" id="archive-rows"></div></section>
       <section><h2>随机翻一条</h2>
         <div class="sea">
           <div class="pick" aria-live="polite"><p class="category"></p><p><strong></strong></p><blockquote><p></p></blockquote></div>
@@ -197,7 +167,17 @@
   </div>
 </template>
   <script src="assets/home-entries.js"></script>
-  <script src="assets/home.js"></script>
+  <script src="assets/home.js?v=0.8"></script>
+  <template id="mobile-controls">
+    <nav class="reader-bar" aria-label="手机阅读工具">
+      <button type="button" data-panel="catalog" aria-controls="reader-dialog" aria-haspopup="dialog">目录</button>
+      <button type="button" data-panel="search" aria-controls="reader-dialog" aria-haspopup="dialog">搜索档案</button>
+    </nav>
+    <dialog id="reader-dialog" aria-labelledby="reader-heading">
+      <header><strong id="reader-heading">目录</strong><button type="button" class="reader-close">关闭</button></header>
+    </dialog>
+  </template>
+  <script src="assets/mobile.js"></script>
   <script src="assets/docsify.min.js"></script>
   <script src="assets/search.min.js"></script>
 </body>
