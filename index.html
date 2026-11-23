@@ -5,6 +5,7 @@
   <title>鱼鱼档案库</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
   <link rel="stylesheet" href="assets/vue.css">
   <style>
     :root { --theme-color: #8aa4b8; }
@@ -49,6 +50,17 @@
     .markdown-section pre > code {
       white-space: pre;
     }
+    .markdown-section img {
+      max-width: 100%;
+      height: auto;
+    }
+    /* 视频封面：点击跳原站，所以做得像张卡片 */
+    .markdown-section p > a > img {
+      max-width: min(440px, 100%);
+      border-radius: 6px;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.10);
+      margin: 2px 0;
+    }
     .markdown-section code {
       background: #f2f4f6;
       padding: 2px 5px;
@@ -61,7 +73,7 @@
     .search input { font-size: 15px; }
 
     /* 作品下面的条目默认收起，点到这部作品（或它的条目）时才展开。
-       注意：链接仍然留在页面里，搜索要靠它，只是不显示。 */
+       链接还留在页面里，展开时才有东西可点。 */
     .sidebar-nav li > ul { display: none; }
     .sidebar-nav li:has(> p.active) > ul,
     .sidebar-nav li:has(li.active) > ul { display: block; }
@@ -135,6 +147,9 @@
       }
     }
   </script>
+
+  <!-- 全站搜索的页面清单，由 更新搜索索引.ps1 生成。加完新条目跑一次脚本即可。 -->
+  <script src="assets/search-pages.js"></script>
 
   <script>
     // GitHub Pages 给每个文件都设了 10 分钟缓存，改完内容刷新会看到旧版。
