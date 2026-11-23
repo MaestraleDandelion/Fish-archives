@@ -110,6 +110,22 @@
     }
   </script>
 
+  <script>
+    // GitHub Pages 给每个文件都设了 10 分钟缓存，改完内容刷新会看到旧版。
+    // 这里给每次请求的 .md 加一个时间戳，强制取最新的。
+    (function () {
+      var open = XMLHttpRequest.prototype.open;
+      var stamp = Date.now();
+      XMLHttpRequest.prototype.open = function (method, url) {
+        var args = Array.prototype.slice.call(arguments);
+        if (String(method).toUpperCase() === 'GET' && /\.md(\?|$)/.test(String(url))) {
+          args[1] = url + (String(url).indexOf('?') > -1 ? '&' : '?') + '_=' + stamp;
+        }
+        return open.apply(this, args);
+      };
+    })();
+  </script>
+
   <script src="assets/docsify.min.js"></script>
   <script src="assets/search.min.js"></script>
 </body>
